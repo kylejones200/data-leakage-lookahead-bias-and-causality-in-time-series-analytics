@@ -1,13 +1,41 @@
-# Data Leakage Lookahead Bias and Causality in Time Series Analytics
+# Data Leakage, Lookahead Bias, and Causality
 
-**Published:** 2025-01-24
-**Medium:** [https://medium.com/@kyle-t-jones/data-leakage-lookahead-bias-and-causality-in-time-series-analytics-76e271ba2f6b](https://medium.com/@kyle-t-jones/data-leakage-lookahead-bias-and-causality-in-time-series-analytics-76e271ba2f6b)
+This project demonstrates data leakage detection and prevention techniques.
 
-## About
+## Project Structure
 
-Place the code for this article in this repository.
-The original article export is saved as `article.md`.
+```
+.
+├── README.md           # This file
+├── main.py            # Main entry point
+├── config.yaml        # Configuration file
+├── requirements.txt   # Python dependencies
+├── src/               # Core functions
+│   ├── core.py        # Data leakage analysis functions
+│   └── plotting.py    # Tufte-style plotting utilities
+├── tests/             # Unit tests
+├── data/              # Data files
+└── images/            # Generated plots and figures
+```
 
-## Files
+## Configuration
 
-Add your `.ipynb`, `.py`, `.yaml`, `.js`, `.ts`, or other project files here.
+Edit `config.yaml` to customize:
+- Data source or synthetic generation
+- Feature engineering options
+- Leakage comparison settings
+- Output settings
+
+## Data Leakage
+
+Common leakage sources:
+- **Lookahead Bias**: Using future information
+- **Target Leakage**: Including target in features
+- **Improper Scaling**: Scaling before train/test split
+- **Data Snooping**: Using full dataset for feature engineering
+
+## Caveats
+
+- By default, generates synthetic time series data.
+- Always split data before feature engineering.
+- Validate models on holdout data.

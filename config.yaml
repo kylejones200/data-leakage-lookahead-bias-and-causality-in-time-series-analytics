@@ -1,0 +1,17 @@
+data:
+  source: null
+  value_column: "value"
+  generate_synthetic: true
+  n_periods: 500
+  seed: 42
+
+analysis:
+  rolling_window: 7
+  volatility_window: 10
+  compare_leakage: true
+
+output:
+  figures_dir: "images"
+  figure_format: "png"
+  figure_dpi: 100
+
