@@ -173,9 +173,9 @@ if __name__ == "__main__":
     logger.info(f"MAPE without leakage: {mape_proper:.2f}%")
     logger.info(f"Difference in MAPE: {mape_proper - mape_leak:.2f}%")
 
-MAPE with data leakage: 16.67%
-MAPE without data leakage: 22.74%
-Difference in MAPE: 6.07%
+# MAPE with data leakage: 16.67%
+# MAPE without data leakage: 22.74%
+# Difference in MAPE: 6.07%
 
 
 # Function to create features (wrong way - with lookahead bias)
@@ -303,11 +303,11 @@ if __name__ == "__main__":
     plt.tight_layout()
     plt.show()
 
-Performance Metrics:
---------------------------------------------------
-MAPE with lookahead bias: 17.81%
-MAPE without lookahead bias: 36.03%
-Difference in MAPE: 18.22%
+# Performance Metrics:
+# --------------------------------------------------
+# MAPE with lookahead bias: 17.81%
+# MAPE without lookahead bias: 36.03%
+# Difference in MAPE: 18.22%
 
 def granger_causality(data, max_lag=12):
     results = {}
@@ -362,10 +362,10 @@ def plot_time_series(data):
     ax1.set_title('Natural Gas Prices Over Time')
     ax1.legend()
         # Plot US Loan Rate
-    ax2.plot(data.index, data['US Loan Rate'], label='US Loan Rate', color='green')
-    ax2.set_title('US Loan Rate Over Time')
-    ax2.legend()
-        plt.tight_layout()
+#     ax2.plot(data.index, data['US Loan Rate'], label='US Loan Rate', color='green')
+#     ax2.set_title('US Loan Rate Over Time')
+#     ax2.legend()
+#         plt.tight_layout()
     plt.show()
 
 if __name__ == "__main__":
@@ -395,16 +395,16 @@ if __name__ == "__main__":
         logger.info(f"{pair}: {p_value:.4f} {significance}")
     logger.info("\nSignificance levels: *** p<0.01, ** p<0.05, * p<0.1")
 
-Granger Causality Results (p-values):
-----------------------------------------
-Japan Gas -> EM Gas: 0.0003 ***
-Japan Gas -> US Loan Rate: 0.0014 ***
-EM Gas -> Japan Gas: 0.0000 ***
-EM Gas -> US Loan Rate: 0.0008 ***
-US Loan Rate -> Japan Gas: 0.0081 ***
-US Loan Rate -> EM Gas: 0.0005 ***
+# Granger Causality Results (p-values):
+# ----------------------------------------
+# Japan Gas -> EM Gas: 0.0003 ***
+# Japan Gas -> US Loan Rate: 0.0014 ***
+# EM Gas -> Japan Gas: 0.0000 ***
+# EM Gas -> US Loan Rate: 0.0008 ***
+# US Loan Rate -> Japan Gas: 0.0081 ***
+# US Loan Rate -> EM Gas: 0.0005 ***
 
-Significance levels: *** p<0.01, ** p<0.05, * p<0.1
+# Significance levels: *** p<0.01, ** p<0.05, * p<0.1
 
 
 warnings.filterwarnings('ignore')
