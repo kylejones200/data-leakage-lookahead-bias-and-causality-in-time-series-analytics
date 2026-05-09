@@ -55,7 +55,7 @@ def main():
     logging.info(f"  RMSE: {metrics_no_leak['rmse']:.4f}")
     
     if config['analysis']['compare_leakage']:
-                df_with_leakage = create_features_with_lookahead(df).dropna()
+        df_with_leakage = create_features_with_lookahead(df).dropna()
         if 'future_rolling_mean' in df_with_leakage.columns:
             X_with_leak = df_with_leakage[['future_rolling_mean']].values
             y_with_leak = df_with_leakage[config['data']['value_column']].values
@@ -65,7 +65,7 @@ def main():
             logging.info(f"  R²: {metrics_with_leak['r2']:.4f}")
             logging.info(f"  RMSE: {metrics_with_leak['rmse']:.4f}")
             
-                        plot_leakage_comparison(metrics_no_leak, metrics_with_leak,
+            plot_leakage_comparison(metrics_no_leak, metrics_with_leak,
                                   "Data Leakage Comparison", output_dir / 'leakage_comparison.png')
     
     logging.info(f"\nAnalysis complete. Figures saved to {output_dir}")

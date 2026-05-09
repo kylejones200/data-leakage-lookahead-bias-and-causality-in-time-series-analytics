@@ -2,6 +2,12 @@
 """
 Create clear, educational animation showing time series windowing concepts.
 
+import logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
 Shows:
 1. Sliding window concept
 2. Train/test splits
@@ -218,19 +224,19 @@ def update(frame):
     
     return []
 
-print("Creating time series windowing animation...")
+logger.info("Creating time series windowing animation...")
 anim = animation.FuncAnimation(fig, update, frames=N_FRAMES, interval=1000/FPS, 
                                blit=True, repeat=True)
 
 # Save animation
 output_file = 'time_series_windowing.gif'
-print(f"Saving animation to {output_file}...")
+logger.info(f"Saving animation to {output_file}...")
 anim.save(output_file, writer='pillow', fps=FPS, dpi=100)
-print(f"✓ Animation saved: {output_file}")
+logger.info(f"✓ Animation saved: {output_file}")
 
 plt.close()
 
-print("""
+logger.info("""
 Animation created successfully!
 
 The animation demonstrates 4 key windowing concepts:

@@ -48,7 +48,7 @@ def train_model(X: np.ndarray, y: np.ndarray) -> Tuple[LinearRegression, Dict]:
 
 def plot_leakage_comparison(metrics_no_leakage: Dict, metrics_with_leakage: Dict,
                            title: str, output_path: Path):
- """Plot comparison of models with and without leakage """
+    """Plot comparison of models with and without leakage """
     fig, ax = plt.subplots(figsize=(10, 6))
     
     categories = ['R²', 'RMSE', 'MAE']
