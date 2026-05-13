@@ -10,13 +10,13 @@ When building forecasting models, it's easy to accidentally "train on the future
 
 I break down four approaches to windowing time series data:
 
-1. **Sliding Windows** ⚠️ - Most common, most dangerous. Overlapping windows leak information between train/test sets.
+1. Sliding Windows ⚠️ - Most common, most dangerous. Overlapping windows leak information between train/test sets.
 
-2. **Train/Test Split** ✅ - Simple and safe. Use 70-80% of early data for training, rest for testing. Always chronological.
+2. Train/Test Split ✅ - Simple and safe. Use 70-80% of early data for training, rest for testing. Always chronological.
 
-3. **Non-Overlapping Windows** ✅ - Extract independent windows with zero overlap. Perfect for anomaly detection and event classification.
+3. Non-Overlapping Windows ✅ - Extract independent windows with zero overlap. Perfect for anomaly detection and event classification.
 
-4. **Purged Forward CV** ✅ - The gold standard. Expanding training windows + purge gaps = publication-quality validation.
+4. Purged Forward CV ✅ - The gold standard. Expanding training windows + purge gaps = publication-quality validation.
 
 ## Key Insight
 

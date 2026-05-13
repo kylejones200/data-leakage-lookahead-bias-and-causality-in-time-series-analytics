@@ -222,16 +222,16 @@ Purged forward CV requires training multiple models (one per fold), which can be
 
 ### Decision Framework
 
-**Start with Train/Test Split**  
+Start with Train/Test Split  
 This method is quick to implement, provides a safe baseline, and works well for initial model development.
 
-**Move to Non-Overlapping Windows when**  
+Move to Non-Overlapping Windows when  
 You have repeating patterns to detect, need more samples for training, or when window-level predictions make sense for your problem.
 
-**Use Purged Forward CV when**  
+Use Purged Forward CV when  
 Your model is ready for production deployment, you need robust performance estimates, you're preparing results for publication, or stakes are high (financial applications, safety-critical systems).
 
-**Avoid Overlapping Sliding Windows unless**  
+Avoid Overlapping Sliding Windows unless  
 You're only doing feature extraction (not train/test splitting on windows), you fully understand the implications, and you've verified no leakage in your specific use case.
 
 ---

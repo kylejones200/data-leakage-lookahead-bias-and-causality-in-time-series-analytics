@@ -29,10 +29,10 @@ Edit `config.yaml` to customize:
 ## Data Leakage
 
 Common leakage sources:
-- **Lookahead Bias**: Using future information
-- **Target Leakage**: Including target in features
-- **Improper Scaling**: Scaling before train/test split
-- **Data Snooping**: Using full dataset for feature engineering
+- Lookahead Bias: Using future information
+- Target Leakage: Including target in features
+- Improper Scaling: Scaling before train/test split
+- Data Snooping: Using full dataset for feature engineering
 
 ## Caveats
 
