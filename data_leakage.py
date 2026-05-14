@@ -5,13 +5,11 @@ import matplotlib.pyplot as plt
 from sklearn.linear_model import LinearRegression
 from statsmodels.tsa.stattools import grangercausalitytests
 import seaborn as sns
-import warnings
 import logging
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(message)s')
 
-warnings.filterwarnings('ignore')
 
 # --- FRED API Fetch ---
 def fetch_fred_data(series_id, api_key, start_date='2000-01-01'):

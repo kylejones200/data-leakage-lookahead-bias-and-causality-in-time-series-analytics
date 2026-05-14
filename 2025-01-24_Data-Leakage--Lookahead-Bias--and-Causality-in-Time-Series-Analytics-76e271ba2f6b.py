@@ -11,7 +11,6 @@ import numpy as np
 import pandas as pd
 import pandas_datareader.data as web
 import seaborn as sns
-import warnings
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(
@@ -20,7 +19,6 @@ logging.basicConfig(
 )
 
 
-warnings.filterwarnings('ignore')
 
 
 def fetch_fred_data(series_id, start_date='2000-01-01', end_date=None):
@@ -410,7 +408,6 @@ if __name__ == "__main__":
 # Significance levels: *** p<0.01, ** p<0.05, * p<0.1
 
 
-warnings.filterwarnings('ignore')
 
 def fetch_fred_data(series_id, start_date='2000-01-01', end_date=None):
     """Fetch FRED data using pandas_datareader."""
