@@ -393,7 +393,6 @@ if __name__ == "__main__":
     gc_results = granger_causality(data)
     
     logger.info("\nGranger Causality Results (p-values):")
-    logger.info("----------------------------------------")
     for pair, p_value in gc_results.items():
         significance = "***" if p_value < 0.01 else "**" if p_value < 0.05 else "*" if p_value < 0.1 else ""
         logger.info(f"{pair}: {p_value:.4f} {significance}")
