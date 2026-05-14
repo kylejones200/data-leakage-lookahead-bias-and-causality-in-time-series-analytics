@@ -10,7 +10,6 @@ import polars as pl
 from datetime import date, timedelta
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).parent))
 from core import create_features, create_features_with_lookahead, train_model, plot_leakage_comparison
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
