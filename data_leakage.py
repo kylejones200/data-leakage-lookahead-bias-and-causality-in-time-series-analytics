@@ -24,12 +24,12 @@ def fetch_fred_data(series_id, api_key, start_date='2000-01-01'):
         'observation_start': start_date,
     }
     response = requests.get(url, params=params)
-    if response.status_code == 200:
-        data = response.json()
-        df = pd.DataFrame(data['observations'])
-        df['date'] = pd.to_datetime(df['date'])
-        df['value'] = pd.to_numeric(df['value'], errors='coerce')
-        return df
+    response.raise_for_status()
+    data = response.json()
+    df = pd.DataFrame(data['observations'])
+    df['date'] = pd.to_datetime(df['date'])
+    df['value'] = pd.to_numeric(df['value'], errors='coerce')
+    return df
     raise Exception(f"FRED API Error {response.status_code}")
 
 # --- Feature Engineering ---
