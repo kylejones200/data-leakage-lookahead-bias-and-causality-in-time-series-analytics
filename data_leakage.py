@@ -30,8 +30,7 @@ def fetch_fred_data(series_id, api_key, start_date='2000-01-01'):
         df['date'] = pd.to_datetime(df['date'])
         df['value'] = pd.to_numeric(df['value'], errors='coerce')
         return df
-    else:
-        raise Exception(f"FRED API Error {response.status_code}")
+    raise Exception(f"FRED API Error {response.status_code}")
 
 # --- Feature Engineering ---
 def create_features(df, leakage=False):
