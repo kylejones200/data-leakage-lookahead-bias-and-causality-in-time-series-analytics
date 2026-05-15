@@ -20,8 +20,8 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 from matplotlib.patches import Rectangle
 from matplotlib.gridspec import GridSpec
-
 np.random.seed(42)
+
 
 # Configuration
 FPS = 5
