@@ -14,15 +14,17 @@ sklearn.linear_model and sklearn.metrics are replaced by
 numpy lstsq + DuckDB REGR_R2 / AVG(POWER(...)) / AVG(ABS(...)).
 """
 
-import duckdb
-import polars as pl
-import numpy as np
-import matplotlib.pyplot as plt
 from pathlib import Path
 
+import duckdb
+import matplotlib.pyplot as plt
+import numpy as np
+import polars as pl
 
-def create_features(df: pl.DataFrame, date_col: str, value_col: str,
-                    leakage: bool = False) -> pl.DataFrame:
+
+def create_features(
+    df: pl.DataFrame, date_col: str, value_col: str, leakage: bool = False
+) -> pl.DataFrame:
     """
     Build predictive features.
 
@@ -30,7 +32,8 @@ def create_features(df: pl.DataFrame, date_col: str, value_col: str,
     leakage=True   →  rolling stats use center=True equivalent (lookahead).
     """
     if not leakage:
-        result = duckdb.sql(f"""
+        result = (
+            duckdb.sql(f"""
             SELECT
                 "{date_col}",
                 "{value_col}",
@@ -47,10 +50,14 @@ def create_features(df: pl.DataFrame, date_col: str, value_col: str,
                     AS monthly_return
             FROM df
             ORDER BY "{date_col}"
-        """).pl().drop_nulls()
+        """)
+            .pl()
+            .drop_nulls()
+        )
     else:
         # Lookahead: centered rolling mean leaks future data
-        result = duckdb.sql(f"""
+        result = (
+            duckdb.sql(f"""
             SELECT
                 "{date_col}",
                 "{value_col}",
@@ -67,7 +74,10 @@ def create_features(df: pl.DataFrame, date_col: str, value_col: str,
                     AS monthly_return
             FROM df
             ORDER BY "{date_col}"
-        """).pl().drop_nulls()
+        """)
+            .pl()
+            .drop_nulls()
+        )
     return result
 
 
@@ -75,7 +85,8 @@ def create_features_with_lookahead(
     df: pl.DataFrame, date_col: str, value_col: str
 ) -> pl.DataFrame:
     """Explicit future-leaking features: LEAD() and forward window."""
-    return duckdb.sql(f"""
+    return (
+        duckdb.sql(f"""
         SELECT
             "{date_col}",
             "{value_col}",
@@ -86,7 +97,10 @@ def create_features_with_lookahead(
                 AS future_rolling_mean
         FROM df
         ORDER BY "{date_col}"
-    """).pl().drop_nulls()
+    """)
+        .pl()
+        .drop_nulls()
+    )
 
 
 def train_model(
@@ -100,11 +114,13 @@ def train_model(
     coefs, intercept = result[:-1], float(result[-1])
 
     # score via DuckDB
-    pred_expr = " + ".join(
-        f"{c} * \"{col}\"" for c, col in zip(coefs, feature_cols)
-    ) + f" + {intercept}"
+    pred_expr = (
+        " + ".join(f'{c} * "{col}"' for c, col in zip(coefs, feature_cols))
+        + f" + {intercept}"
+    )
 
-    metrics = duckdb.sql(f"""
+    metrics = (
+        duckdb.sql(f"""
         WITH preds AS (
             SELECT "{target_col}" AS actual, {pred_expr} AS predicted FROM df
         )
@@ -113,7 +129,10 @@ def train_model(
             SQRT(AVG(POWER(actual - predicted, 2))) AS rmse,
             AVG(ABS(actual - predicted))            AS mae
         FROM preds
-    """).pl().row(0, named=True)
+    """)
+        .pl()
+        .row(0, named=True)
+    )
 
     return coefs, intercept, metrics
 
@@ -128,13 +147,21 @@ def plot_leakage_comparison(
     if not plot:
         return
     categories = ["R²", "RMSE", "MAE"]
-    no_leak   = [metrics_no_leakage["r2"],   metrics_no_leakage["rmse"],   metrics_no_leakage["mae"]]
-    with_leak = [metrics_with_leakage["r2"], metrics_with_leakage["rmse"], metrics_with_leakage["mae"]]
+    no_leak = [
+        metrics_no_leakage["r2"],
+        metrics_no_leakage["rmse"],
+        metrics_no_leakage["mae"],
+    ]
+    with_leak = [
+        metrics_with_leakage["r2"],
+        metrics_with_leakage["rmse"],
+        metrics_with_leakage["mae"],
+    ]
     x = np.arange(len(categories))
     w = 0.35
 
     fig, ax = plt.subplots(figsize=(10, 6))
-    ax.bar(x - w / 2, no_leak,   w, label="No Leakage",   color="#4A90A4", alpha=0.7)
+    ax.bar(x - w / 2, no_leak, w, label="No Leakage", color="#4A90A4", alpha=0.7)
     ax.bar(x + w / 2, with_leak, w, label="With Leakage", color="#D4A574", alpha=0.7)
     ax.set_xticks(x)
     ax.set_xticklabels(categories)

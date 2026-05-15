@@ -2,16 +2,18 @@
 """Data leakage and lookahead bias — Polars + DuckDB rewrite (no sklearn)."""
 
 import argparse
-import yaml
 import logging
-import numpy as np
-import polars as pl
 from datetime import date, timedelta
 from pathlib import Path
 
-from core import create_features, train_model, plot_leakage_comparison
+import numpy as np
+import polars as pl
+import yaml
+from core import create_features, plot_leakage_comparison, train_model
 
-logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+)
 FEATURE_COLS = ["rolling_mean", "volatility", "price_lag", "monthly_return"]
 
 
@@ -31,7 +33,11 @@ def main():
 
     config = load_config(args.config)
     value_col = config["data"]["value_column"]
-    output_dir = Path(args.output_dir) if args.output_dir else Path(config["output"]["figures_dir"])
+    output_dir = (
+        Path(args.output_dir)
+        if args.output_dir
+        else Path(config["output"]["figures_dir"])
+    )
     output_dir.mkdir(exist_ok=True)
 
     if args.data_path and args.data_path.exists():
@@ -67,7 +73,8 @@ def main():
         logging.info(f"\nR² inflation from leakage: +{r2_inflation:.4f}")
 
         plot_leakage_comparison(
-            metrics_clean, metrics_leak,
+            metrics_clean,
+            metrics_leak,
             "Model Metrics: Causal vs Lookahead Features",
             output_dir / "leakage_comparison.png",
         )
