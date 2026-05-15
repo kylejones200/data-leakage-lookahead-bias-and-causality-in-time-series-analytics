@@ -19,7 +19,6 @@ import polars as pl
 import numpy as np
 import matplotlib.pyplot as plt
 from pathlib import Path
-from typing import Dict, Tuple
 
 
 def create_features(df: pl.DataFrame, date_col: str, value_col: str,
@@ -92,7 +91,7 @@ def create_features_with_lookahead(
 
 def train_model(
     df: pl.DataFrame, feature_cols: list, target_col: str
-) -> Tuple[np.ndarray, float, Dict]:
+) -> tuple[np.ndarray, float, dict]:
     """numpy lstsq for coefficients; DuckDB for all evaluation metrics."""
     X = df.select(feature_cols).to_numpy()
     y = df[target_col].to_numpy()
@@ -120,8 +119,8 @@ def train_model(
 
 
 def plot_leakage_comparison(
-    metrics_no_leakage: Dict,
-    metrics_with_leakage: Dict,
+    metrics_no_leakage: dict,
+    metrics_with_leakage: dict,
     title: str,
     output_path: Path,
     plot: bool = False,

@@ -325,7 +325,7 @@ def plot_correlations_and_scatter(data, plot: bool = False):
     
     # Create a figure with subplots
     if plot:
-        fig = plt.figure(figsize=(15, 10))
+        plt.figure(figsize=(15, 10))
     
     # Correlation heatmap
         ax1 = plt.subplot2grid((2, 3), (0, 0), colspan=2)
@@ -546,7 +546,7 @@ def plot_time_series(data, plot: bool = False):
 def plot_correlations_and_scatter(data, plot: bool = False):
     corr = data.corr()
     if plot:
-        fig = plt.figure(figsize=(15, 10))
+        plt.figure(figsize=(15, 10))
         ax1 = plt.subplot2grid((2, 3), (0, 0), colspan=2)
         sns.heatmap(corr, annot=True, cmap='coolwarm', center=0, ax=ax1)
         ax1.set_title("Correlation Heatmap")

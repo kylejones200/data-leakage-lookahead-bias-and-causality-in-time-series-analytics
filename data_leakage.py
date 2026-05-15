@@ -1,10 +1,6 @@
 import pandas as pd
-import numpy as np
 import requests
-import matplotlib.pyplot as plt
-from sklearn.linear_model import LinearRegression
 from statsmodels.tsa.stattools import grangercausalitytests
-import seaborn as sns
 import logging
 
 # Configure logging

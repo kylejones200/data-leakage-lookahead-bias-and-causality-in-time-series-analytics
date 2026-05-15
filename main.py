@@ -18,7 +18,7 @@ def load_config(config_path: Path = None) -> dict:
     if config_path is None:
         config_path = Path(__file__).parent / 'config.yaml'
     
-    with open(config_path, 'r') as f:
+    with open(config_path) as f:
         return yaml.safe_load(f)
 
 def main():
@@ -50,7 +50,7 @@ def main():
     y_no_leak = df_no_leakage[config['data']['value_column']].values
     
     model_no_leak, metrics_no_leak = train_model(X_no_leak, y_no_leak)
-    logging.info(f"\nModel WITHOUT Leakage:")
+    logging.info("\nModel WITHOUT Leakage:")
     logging.info(f"  R²: {metrics_no_leak['r2']:.4f}")
     logging.info(f"  RMSE: {metrics_no_leak['rmse']:.4f}")
     
@@ -61,7 +61,7 @@ def main():
             y_with_leak = df_with_leakage[config['data']['value_column']].values
             
             model_with_leak, metrics_with_leak = train_model(X_with_leak, y_with_leak)
-            logging.info(f"\nModel WITH Leakage:")
+            logging.info("\nModel WITH Leakage:")
             logging.info(f"  R²: {metrics_with_leak['r2']:.4f}")
             logging.info(f"  RMSE: {metrics_with_leak['rmse']:.4f}")
             

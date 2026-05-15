@@ -18,7 +18,6 @@ Shows:
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
-from matplotlib.patches import Rectangle
 from matplotlib.gridspec import GridSpec
 np.random.seed(42)
 
@@ -107,7 +106,7 @@ def update(frame):
     ax2.set_title('1. Sliding Window (Overlapping)', fontsize=11, fontweight='normal')
     ax2.text(0.05, 0.95, 'Step size: 5\nOverlap: YES', 
             transform=ax2.transAxes, fontsize=9, verticalalignment='top',
-            bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.3))
+            bbox={'boxstyle': 'round', 'facecolor': 'wheat', 'alpha': 0.3})
     ax2.set_xlim(0, n_points)
     
     # ========================================================================
@@ -169,7 +168,7 @@ def update(frame):
     ax4.set_title('3. Non-Overlapping Windows', fontsize=11, fontweight='normal')
     ax4.text(0.05, 0.95, 'No overlap\nNo leakage', 
             transform=ax4.transAxes, fontsize=9, verticalalignment='top',
-            bbox=dict(boxstyle='round', facecolor='lightgreen', alpha=0.3))
+            bbox={'boxstyle': 'round', 'facecolor': 'lightgreen', 'alpha': 0.3})
     ax4.set_xlim(0, n_points)
     
     # ========================================================================

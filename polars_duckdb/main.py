@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """Data leakage and lookahead bias — Polars + DuckDB rewrite (no sklearn)."""
 
-import sys
 import argparse
 import yaml
 import logging
@@ -10,7 +9,7 @@ import polars as pl
 from datetime import date, timedelta
 from pathlib import Path
 
-from core import create_features, create_features_with_lookahead, train_model, plot_leakage_comparison
+from core import create_features, train_model, plot_leakage_comparison
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 FEATURE_COLS = ["rolling_mean", "volatility", "price_lag", "monthly_return"]
