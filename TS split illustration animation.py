@@ -2,21 +2,6 @@
 
 Magics and shell lines are commented out. Run with a normal Python interpreter."""
 
-
-# --- code cell ---
-
-"""
-Improved Time Series Windowing Animation
-
-This creates a clear, educational visualization showing 4 key windowing methods:
-1. Sliding Window (overlapping)
-2. Train/Test Split (simple chronological)
-3. Non-Overlapping Windows (leak-safe)
-4. Purged Forward CV (most rigorous)
-
-Uses actual time series data and clear color coding.
-"""
-
 import matplotlib.animation as animation
 import matplotlib.pyplot as plt
 import numpy as np
@@ -24,40 +9,12 @@ from IPython.display import HTML
 from matplotlib.gridspec import GridSpec
 from matplotlib.patches import Patch
 
-np.random.seed(42)
 
-# Configuration
-FPS = 5
-DURATION = 12
-N_FRAMES = FPS * DURATION
-
-# Generate realistic time series
-n_points = 100
-time = np.arange(n_points)
-trend = 0.5 * time
-seasonal = 10 * np.sin(2 * np.pi * time / 20)
-noise = np.random.normal(0, 2, n_points)
-data = trend + seasonal + noise + 50
-
-# Windowing parameters
-window_size = 20
-test_size = 5
-purge_gap = 2
-
-# Create figure
-fig = plt.figure(figsize=(16, 10), facecolor="white")
-gs = GridSpec(3, 2, figure=fig, hspace=0.35, wspace=0.3)
-
-ax1 = fig.add_subplot(gs[0, :])
-ax2 = fig.add_subplot(gs[1, 0])
-ax3 = fig.add_subplot(gs[1, 1])
-ax4 = fig.add_subplot(gs[2, 0])
-ax5 = fig.add_subplot(gs[2, 1])
-
-# Tufte style
-for ax in [ax1, ax2, ax3, ax4, ax5]:
-    ax.spines["top"].set_visible(False)
-    ax.spines["right"].set_visible(False)
+def main():
+    anim = animation.FuncAnimation(
+        fig, update, frames=N_FRAMES, interval=1000 / FPS, blit=True, repeat=True
+    )
+    HTML(anim.to_jshtml())
 
 
 def update(frame):
@@ -65,11 +22,8 @@ def update(frame):
         ax.clear()
         ax.spines["top"].set_visible(False)
         ax.spines["right"].set_visible(False)
-
     progress = frame / N_FRAMES
     current_pos = int(progress * (n_points - window_size))
-
-    # 1. Main time series
     ax1.plot(time, data, "black", linewidth=2, alpha=0.7)
     window_x = time[current_pos : current_pos + window_size]
     window_y = data[current_pos : current_pos + window_size]
@@ -79,8 +33,6 @@ def update(frame):
     ax1.set_ylabel("Value", fontsize=11)
     ax1.set_title("Time Series Windowing Methods", fontsize=13, fontweight="normal")
     ax1.set_xlim(0, n_points)
-
-    # 2. Sliding window (overlapping)
     ax2.plot(time, data, "gray", linewidth=1, alpha=0.3)
     for i in range(0, min(current_pos + 1, 60), 5):
         alpha = 0.1 + 0.3 * (i / max(current_pos, 1))
@@ -105,8 +57,6 @@ def update(frame):
         bbox=dict(boxstyle="round", facecolor="wheat", alpha=0.3),
     )
     ax2.set_xlim(0, n_points)
-
-    # 3. Train/test split
     split = int(0.7 * n_points)
     ax3.plot(time[:split], data[:split], "blue", linewidth=2, alpha=0.7)
     ax3.fill_between(time[:split], 0, data[:split], alpha=0.2, color="blue")
@@ -121,13 +71,11 @@ def update(frame):
     ax3.set_title("2. Train/Test Split (70/30)", fontsize=11, fontweight="normal")
     ax3.legend(["Train", "Test"], loc="upper left", fontsize=9)
     ax3.set_xlim(0, n_points)
-
-    # 4. Non-overlapping windows
     ax4.plot(time, data, "gray", linewidth=1, alpha=0.3)
     n_windows = int(progress * 4) + 1
     colors = ["blue", "green", "orange", "purple"]
     for i in range(n_windows):
-        start, end = i * window_size, min((i + 1) * window_size, n_points)
+        start, end = (i * window_size, min((i + 1) * window_size, n_points))
         if end <= n_points:
             ax4.fill_between(
                 time[start:end], 0, data[start:end], alpha=0.3, color=colors[i % 4]
@@ -152,8 +100,6 @@ def update(frame):
         bbox=dict(boxstyle="round", facecolor="lightgreen", alpha=0.3),
     )
     ax4.set_xlim(0, n_points)
-
-    # 5. Purged forward CV
     ax5.plot(time, data, "gray", linewidth=1, alpha=0.3)
     n_folds = int(progress * 3) + 1
     for fold in range(n_folds):
@@ -163,7 +109,7 @@ def update(frame):
                 time[:train_end], 0, data[:train_end], alpha=0.2, color="blue"
             )
             ax5.plot(time[:train_end], data[:train_end], "blue", linewidth=1, alpha=0.5)
-            purge_start, purge_end = train_end, train_end + purge_gap
+            purge_start, purge_end = (train_end, train_end + purge_gap)
             if purge_end < n_points:
                 ax5.axvspan(purge_start, purge_end, alpha=0.2, color="yellow", zorder=0)
             test_start = train_end + purge_gap
@@ -198,22 +144,57 @@ def update(frame):
     ]
     ax5.legend(handles=legend_elements, loc="upper left", fontsize=9)
     ax5.set_xlim(0, n_points)
-
     return []
 
 
+def main() -> None:
+    "\nImproved Time Series Windowing Animation\n\nThis creates a clear, educational visualization showing 4 key windowing methods:\n1. Sliding Window (overlapping)\n2. Train/Test Split (simple chronological)\n3. Non-Overlapping Windows (leak-safe)\n4. Purged Forward CV (most rigorous)\n\nUses actual time series data and clear color coding.\n"
 
-def main():
-    # Create animation
-    anim = animation.FuncAnimation(
-        fig, update, frames=N_FRAMES, interval=1000 / FPS, blit=True, repeat=True
-    )
+    np.random.seed(42)
 
-    # Display in notebook
-    HTML(anim.to_jshtml())
+    FPS = 5
 
-    # To save: uncomment below
-    # anim.save('time_series_windowing.gif', writer='pillow', fps=FPS, dpi=100)
+    DURATION = 12
+
+    N_FRAMES = FPS * DURATION
+
+    n_points = 100
+
+    time = np.arange(n_points)
+
+    trend = 0.5 * time
+
+    seasonal = 10 * np.sin(2 * np.pi * time / 20)
+
+    noise = np.random.normal(0, 2, n_points)
+
+    data = trend + seasonal + noise + 50
+
+    window_size = 20
+
+    test_size = 5
+
+    purge_gap = 2
+
+    fig = plt.figure(figsize=(16, 10), facecolor="white")
+
+    gs = GridSpec(3, 2, figure=fig, hspace=0.35, wspace=0.3)
+
+    ax1 = fig.add_subplot(gs[0, :])
+
+    ax2 = fig.add_subplot(gs[1, 0])
+
+    ax3 = fig.add_subplot(gs[1, 1])
+
+    ax4 = fig.add_subplot(gs[2, 0])
+
+    ax5 = fig.add_subplot(gs[2, 1])
+
+    for ax in [ax1, ax2, ax3, ax4, ax5]:
+        ax.spines["top"].set_visible(False)
+        ax.spines["right"].set_visible(False)
+
+    main()
 
 
 if __name__ == "__main__":

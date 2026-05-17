@@ -67,107 +67,111 @@ def train_model(data, features, target="value"):
 
 def plot_features(data, leakage_data, proper_data, title, filename, plot: bool = False):
     """Plot feature comparison for leakage and proper handling"""
-    if plot:
-        fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(12, 10))
+    if not plot:
+        return
 
-        # Plot rolling means
-        ax1.plot(data.index, data["value"], label="Original Price", alpha=0.5)
-        ax1.plot(
-            leakage_data.index,
-            leakage_data["rolling_mean"],
-            label="Rolling Mean (with leakage)",
-            linewidth=2,
-        )
-        ax1.plot(
-            proper_data.index,
-            proper_data["rolling_mean"],
-            label="Rolling Mean (proper)",
-            linewidth=2,
-        )
-        ax1.set_title(f"{title} - Rolling Means")
-        ax1.legend(loc="upper left")
-        ax1.set_xlabel("Date")
-        ax1.set_ylabel("Price")
+    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(12, 10))
 
-        # Plot volatility
-        ax2.plot(
-            leakage_data.index,
-            leakage_data["volatility"],
-            label="Volatility (with leakage)",
-            linewidth=2,
-        )
-        ax2.plot(
-            proper_data.index,
-            proper_data["volatility"],
-            label="Volatility (proper)",
-            linewidth=2,
-        )
-        ax2.set_title(f"{title} - Volatility")
-        ax2.legend(loc="upper left")
-        ax2.set_xlabel("Date")
-        ax2.set_ylabel("Volatility")
+    # Plot rolling means
+    ax1.plot(data.index, data["value"], label="Original Price", alpha=0.5)
+    ax1.plot(
+        leakage_data.index,
+        leakage_data["rolling_mean"],
+        label="Rolling Mean (with leakage)",
+        linewidth=2,
+    )
+    ax1.plot(
+        proper_data.index,
+        proper_data["rolling_mean"],
+        label="Rolling Mean (proper)",
+        linewidth=2,
+    )
+    ax1.set_title(f"{title} - Rolling Means")
+    ax1.legend(loc="upper left")
+    ax1.set_xlabel("Date")
+    ax1.set_ylabel("Price")
 
-        plt.tight_layout()
-        plt.savefig(filename, dpi=300, bbox_inches="tight")
-        plt.show()
+    # Plot volatility
+    ax2.plot(
+        leakage_data.index,
+        leakage_data["volatility"],
+        label="Volatility (with leakage)",
+        linewidth=2,
+    )
+    ax2.plot(
+        proper_data.index,
+        proper_data["volatility"],
+        label="Volatility (proper)",
+        linewidth=2,
+    )
+    ax2.set_title(f"{title} - Volatility")
+    ax2.legend(loc="upper left")
+    ax2.set_xlabel("Date")
+    ax2.set_ylabel("Volatility")
+
+    plt.tight_layout()
+    plt.savefig(filename, dpi=300, bbox_inches="tight")
+    plt.show()
 
 def plot_predictions(
     leakage_results, proper_results, title, filename, plot: bool = False
 ):
     """Plot prediction results"""
-    if plot:
-        fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(12, 10))
+    if not plot:
+        return
 
-        # Unpack results
-        dates_leak, y_test_leak, y_pred_leak = leakage_results
-        dates_proper, y_test_proper, y_pred_proper = proper_results
+    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(12, 10))
 
-        # Calculate MAPE
-        mape_leak = mape(y_test_leak, y_pred_leak)
-        mape_proper = mape(y_test_proper, y_pred_proper)
+    # Unpack results
+    dates_leak, y_test_leak, y_pred_leak = leakage_results
+    dates_proper, y_test_proper, y_pred_proper = proper_results
 
-        # Time series predictions
-        ax1.plot(dates_leak, y_test_leak, label="Actual", alpha=0.7)
-        ax1.plot(
-            dates_leak,
-            y_pred_leak,
-            "--",
-            label=f"With Leakage (MAPE: {mape_leak:.2f}%)",
-        )
-        ax1.plot(
-            dates_proper,
-            y_pred_proper,
-            "--",
-            label=f"Proper (MAPE: {mape_proper:.2f}%)",
-        )
-        ax1.set_title(f"{title} - Predictions Over Time")
-        ax1.legend(loc="upper left")
-        ax1.set_xlabel("Date")
-        ax1.set_ylabel("Price")
+    # Calculate MAPE
+    mape_leak = mape(y_test_leak, y_pred_leak)
+    mape_proper = mape(y_test_proper, y_pred_proper)
 
-        # Scatter plots
-        ax2.scatter(y_test_leak, y_pred_leak, alpha=0.5, label="With Leakage")
-        ax2.scatter(y_test_proper, y_pred_proper, alpha=0.5, label="Proper")
-        ax2.plot(
-            [
-                min(y_test_leak.min(), y_test_proper.min()),
-                max(y_test_leak.max(), y_test_proper.max()),
-            ],
-            [
-                min(y_test_leak.min(), y_test_proper.min()),
-                max(y_test_leak.max(), y_test_proper.max()),
-            ],
-            "r--",
-            label="Perfect Prediction",
-        )
-        ax2.set_title("Actual vs Predicted Prices")
-        ax2.legend(loc="upper left")
-        ax2.set_xlabel("Actual Price")
-        ax2.set_ylabel("Predicted Price")
+    # Time series predictions
+    ax1.plot(dates_leak, y_test_leak, label="Actual", alpha=0.7)
+    ax1.plot(
+        dates_leak,
+        y_pred_leak,
+        "--",
+        label=f"With Leakage (MAPE: {mape_leak:.2f}%)",
+    )
+    ax1.plot(
+        dates_proper,
+        y_pred_proper,
+        "--",
+        label=f"Proper (MAPE: {mape_proper:.2f}%)",
+    )
+    ax1.set_title(f"{title} - Predictions Over Time")
+    ax1.legend(loc="upper left")
+    ax1.set_xlabel("Date")
+    ax1.set_ylabel("Price")
 
-        plt.tight_layout()
-        plt.savefig(filename, dpi=300, bbox_inches="tight")
-        plt.show()
+    # Scatter plots
+    ax2.scatter(y_test_leak, y_pred_leak, alpha=0.5, label="With Leakage")
+    ax2.scatter(y_test_proper, y_pred_proper, alpha=0.5, label="Proper")
+    ax2.plot(
+        [
+            min(y_test_leak.min(), y_test_proper.min()),
+            max(y_test_leak.max(), y_test_proper.max()),
+        ],
+        [
+            min(y_test_leak.min(), y_test_proper.min()),
+            max(y_test_leak.max(), y_test_proper.max()),
+        ],
+        "r--",
+        label="Perfect Prediction",
+    )
+    ax2.set_title("Actual vs Predicted Prices")
+    ax2.legend(loc="upper left")
+    ax2.set_xlabel("Actual Price")
+    ax2.set_ylabel("Predicted Price")
+
+    plt.tight_layout()
+    plt.savefig(filename, dpi=300, bbox_inches="tight")
+    plt.show()
 
 if __name__ == "__main__":
     # Fetch data
@@ -422,20 +426,22 @@ def plot_correlations_and_scatter(data, plot: bool = False):
         plt.show()
 
 def plot_time_series(data, plot: bool = False):
-    if plot:
-        fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(15, 10))
+    if not plot:
+        return
 
-        # Plot gas prices
-        ax1.plot(data.index, data["Japan Gas"], label="Japan Gas")
-        ax1.plot(data.index, data["EM Gas"], label="EM Gas")
-        ax1.set_title("Natural Gas Prices Over Time")
-        ax1.legend()
-        # Plot US Loan Rate
-        #     ax2.plot(data.index, data['US Loan Rate'], label='US Loan Rate', color='green')
-        #     ax2.set_title('US Loan Rate Over Time')
-        #     ax2.legend()
-        #         plt.tight_layout()
-        plt.show()
+    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(15, 10))
+
+    # Plot gas prices
+    ax1.plot(data.index, data["Japan Gas"], label="Japan Gas")
+    ax1.plot(data.index, data["EM Gas"], label="EM Gas")
+    ax1.set_title("Natural Gas Prices Over Time")
+    ax1.legend()
+    # Plot US Loan Rate
+    #     ax2.plot(data.index, data['US Loan Rate'], label='US Loan Rate', color='green')
+    #     ax2.set_title('US Loan Rate Over Time')
+    #     ax2.legend()
+    #         plt.tight_layout()
+    plt.show()
 
 if __name__ == "__main__":
     # Fetch data

@@ -55,45 +55,47 @@ def plot_leakage_comparison(
     metrics_no_leakage: Dict, metrics_with_leakage: Dict, title: str, output_path: Path
 ):
     """Plot comparison of models with and without leakage"""
-    if plot:
-        fig, ax = plt.subplots(figsize=(10, 6))
+    if not plot:
+        return
 
-        categories = ["R²", "RMSE", "MAE"]
-        no_leakage = [
-            metrics_no_leakage["r2"],
-            metrics_no_leakage["rmse"],
-            metrics_no_leakage["mae"],
-        ]
-        with_leakage = [
-            metrics_with_leakage["r2"],
-            metrics_with_leakage["rmse"],
-            metrics_with_leakage["mae"],
-        ]
+    fig, ax = plt.subplots(figsize=(10, 6))
 
-        x = np.arange(len(categories))
-        width = 0.35
+    categories = ["R²", "RMSE", "MAE"]
+    no_leakage = [
+        metrics_no_leakage["r2"],
+        metrics_no_leakage["rmse"],
+        metrics_no_leakage["mae"],
+    ]
+    with_leakage = [
+        metrics_with_leakage["r2"],
+        metrics_with_leakage["rmse"],
+        metrics_with_leakage["mae"],
+    ]
 
-        ax.bar(
-            x - width / 2,
-            no_leakage,
-            width,
-            label="No Leakage",
-            color="#4A90A4",
-            alpha=0.7,
-        )
-        ax.bar(
-            x + width / 2,
-            with_leakage,
-            width,
-            label="With Leakage",
-            color="#D4A574",
-            alpha=0.7,
-        )
+    x = np.arange(len(categories))
+    width = 0.35
 
-        ax.set_xticks(x)
-        ax.set_xticklabels(categories)
-        ax.set_ylabel("Value")
-        ax.legend(loc="best")
+    ax.bar(
+        x - width / 2,
+        no_leakage,
+        width,
+        label="No Leakage",
+        color="#4A90A4",
+        alpha=0.7,
+    )
+    ax.bar(
+        x + width / 2,
+        with_leakage,
+        width,
+        label="With Leakage",
+        color="#D4A574",
+        alpha=0.7,
+    )
 
-        plt.savefig(output_path, dpi=100, bbox_inches="tight")
-        plt.close()
+    ax.set_xticks(x)
+    ax.set_xticklabels(categories)
+    ax.set_ylabel("Value")
+    ax.legend(loc="best")
+
+    plt.savefig(output_path, dpi=100, bbox_inches="tight")
+    plt.close()
