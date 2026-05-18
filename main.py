@@ -18,7 +18,7 @@ logging.basicConfig(
 )
 
 
-def load_config(config_path: Path = None) -> dict:
+def load_config(config_path: Path | None = None) -> dict:
     """Load configuration from YAML file."""
     if config_path is None:
         config_path = Path(__file__).parent / "config.yaml"
@@ -37,7 +37,6 @@ def main():
         "--output-dir", type=Path, default=None, help="Output directory"
     )
     args = parser.parse_args()
-
     config = load_config(args.config)
     output_dir = (
         Path(args.output_dir)
@@ -45,7 +44,6 @@ def main():
         else Path(config["output"]["figures_dir"])
     )
     output_dir.mkdir(exist_ok=True)
-
     if args.data_path and args.data_path.exists():
         df = pd.read_csv(args.data_path)
     elif config["data"]["generate_synthetic"]:
@@ -57,29 +55,24 @@ def main():
         df = pd.DataFrame({"date": dates, config["data"]["value_column"]: values})
     else:
         raise ValueError("No data source specified")
-
         df_no_leakage = create_features(df, leakage=False).dropna()
     X_no_leak = df_no_leakage[
         ["rolling_mean", "volatility", "price_lag", "monthly_return"]
     ].values
     y_no_leak = df_no_leakage[config["data"]["value_column"]].values
-
     model_no_leak, metrics_no_leak = train_model(X_no_leak, y_no_leak)
     logging.info("\nModel WITHOUT Leakage:")
     logging.info(f"  R²: {metrics_no_leak['r2']:.4f}")
     logging.info(f"  RMSE: {metrics_no_leak['rmse']:.4f}")
-
     if config["analysis"]["compare_leakage"]:
         df_with_leakage = create_features_with_lookahead(df).dropna()
         if "future_rolling_mean" in df_with_leakage.columns:
             X_with_leak = df_with_leakage[["future_rolling_mean"]].values
             y_with_leak = df_with_leakage[config["data"]["value_column"]].values
-
             model_with_leak, metrics_with_leak = train_model(X_with_leak, y_with_leak)
             logging.info("\nModel WITH Leakage:")
             logging.info(f"  R²: {metrics_with_leak['r2']:.4f}")
             logging.info(f"  RMSE: {metrics_with_leak['rmse']:.4f}")
-
             plot_leakage_comparison(
                 metrics_no_leak,
                 metrics_with_leak,

@@ -1,6 +1,5 @@
 """Core functions for data leakage, lookahead bias, and causality analysis."""
 
-import logging
 from pathlib import Path
 from typing import Dict, Tuple
 
@@ -9,9 +8,6 @@ import numpy as np
 import pandas as pd
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import r2_score
-
-# Configure logging
-logging.basicConfig(level=logging.INFO, format="%(message)s")
 
 
 def create_features(df: pd.DataFrame, leakage: bool = False) -> pd.DataFrame:
@@ -41,25 +37,22 @@ def train_model(X: np.ndarray, y: np.ndarray) -> Tuple[LinearRegression, Dict]:
     model = LinearRegression()
     model.fit(X, y)
     y_pred = model.predict(X)
-
     metrics = {
         "r2": r2_score(y, y_pred),
         "rmse": np.sqrt(np.mean((y - y_pred) ** 2)),
         "mae": np.mean(np.abs(y - y_pred)),
     }
-
     return model, metrics
 
 
 def plot_leakage_comparison(
     metrics_no_leakage: Dict, metrics_with_leakage: Dict, title: str, output_path: Path
-):
+, plot: bool = False):
     """Plot comparison of models with and without leakage"""
     if not plot:
         return
 
     fig, ax = plt.subplots(figsize=(10, 6))
-
     categories = ["R²", "RMSE", "MAE"]
     no_leakage = [
         metrics_no_leakage["r2"],
@@ -71,10 +64,8 @@ def plot_leakage_comparison(
         metrics_with_leakage["rmse"],
         metrics_with_leakage["mae"],
     ]
-
     x = np.arange(len(categories))
     width = 0.35
-
     ax.bar(
         x - width / 2,
         no_leakage,
@@ -91,11 +82,9 @@ def plot_leakage_comparison(
         color="#D4A574",
         alpha=0.7,
     )
-
     ax.set_xticks(x)
     ax.set_xticklabels(categories)
     ax.set_ylabel("Value")
     ax.legend(loc="best")
-
     plt.savefig(output_path, dpi=100, bbox_inches="tight")
     plt.close()

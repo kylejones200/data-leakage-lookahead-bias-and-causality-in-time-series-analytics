@@ -149,47 +149,23 @@ def update(frame):
 
 def main() -> None:
     "\nImproved Time Series Windowing Animation\n\nThis creates a clear, educational visualization showing 4 key windowing methods:\n1. Sliding Window (overlapping)\n2. Train/Test Split (simple chronological)\n3. Non-Overlapping Windows (leak-safe)\n4. Purged Forward CV (most rigorous)\n\nUses actual time series data and clear color coding.\n"
-
     np.random.seed(42)
-
     FPS = 5
-
     DURATION = 12
-
-    N_FRAMES = FPS * DURATION
-
+    FPS * DURATION
     n_points = 100
-
     time = np.arange(n_points)
-
     trend = 0.5 * time
-
     seasonal = 10 * np.sin(2 * np.pi * time / 20)
-
     noise = np.random.normal(0, 2, n_points)
-
-    data = trend + seasonal + noise + 50
-
-    window_size = 20
-
-    test_size = 5
-
-    purge_gap = 2
-
+    trend + seasonal + noise + 50
     fig = plt.figure(figsize=(16, 10), facecolor="white")
-
     gs = GridSpec(3, 2, figure=fig, hspace=0.35, wspace=0.3)
-
     ax1 = fig.add_subplot(gs[0, :])
-
     ax2 = fig.add_subplot(gs[1, 0])
-
     ax3 = fig.add_subplot(gs[1, 1])
-
     ax4 = fig.add_subplot(gs[2, 0])
-
     ax5 = fig.add_subplot(gs[2, 1])
-
     for ax in [ax1, ax2, ax3, ax4, ax5]:
         ax.spines["top"].set_visible(False)
         ax.spines["right"].set_visible(False)

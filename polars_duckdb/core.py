@@ -27,7 +27,6 @@ def create_features(
 ) -> pl.DataFrame:
     """
     Build predictive features.
-
     leakage=False  →  all windows end at 1 PRECEDING; structurally causal.
     leakage=True   →  rolling stats use center=True equivalent (lookahead).
     """
@@ -112,13 +111,11 @@ def train_model(
     X_aug = np.column_stack([X, np.ones(len(X))])
     result, *_ = np.linalg.lstsq(X_aug, y, rcond=None)
     coefs, intercept = result[:-1], float(result[-1])
-
     # score via DuckDB
     pred_expr = (
         " + ".join(f'{c} * "{col}"' for c, col in zip(coefs, feature_cols))
         + f" + {intercept}"
     )
-
     metrics = (
         duckdb.sql(f"""
         WITH preds AS (
@@ -133,7 +130,6 @@ def train_model(
         .pl()
         .row(0, named=True)
     )
-
     return coefs, intercept, metrics
 
 
@@ -159,7 +155,6 @@ def plot_leakage_comparison(
     ]
     x = np.arange(len(categories))
     w = 0.35
-
     fig, ax = plt.subplots(figsize=(10, 6))
     ax.bar(x - w / 2, no_leak, w, label="No Leakage", color="#4A90A4", alpha=0.7)
     ax.bar(x + w / 2, with_leak, w, label="With Leakage", color="#D4A574", alpha=0.7)
